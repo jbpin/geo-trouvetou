@@ -15,7 +15,7 @@ elapsed_time = (note)->
 
 app = {
 
-	tree:null,
+	tree:new geo.GeoTrouvetou(),
 
 	start:()->
 		console.log "Welcome to geo-trouvetou example"
@@ -33,10 +33,8 @@ app = {
 				item = data.data[i]
 				point = new geo.GeoPoint(item[18], item[17])
 				point.data = item
-				if(!app.tree)
-					app.tree = new geo.TreeNode point
-				else
-					app.tree.addLeaf point
+				app.tree.addPoint point
+			console.log app.tree.tree
 			elapsed_time("building tree")
 			console.log data.data.length+" points loaded"
 			console.log "The app is ready"
@@ -51,7 +49,9 @@ app = {
 			if err
 				console.log err
 			time = process.hrtime()
-			console.log app.tree.getClosest new geo.GeoPoint(parseFloat(result.Latitude), parseFloat(result.Longitude))
+			gp = new geo.GeoPoint(parseFloat(result.Latitude), parseFloat(result.Longitude))
+			console.log gp
+			console.log app.tree.findClosest gp
 			elapsed_time("found")
 			app.infinite()
 }
