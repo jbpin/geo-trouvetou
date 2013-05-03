@@ -1,0 +1,23 @@
+{
+  "name": "Geotrouvetou-example",
+  "version": "0.0.1",
+  "author": "Jean-Baptiste Pin <jeanbaptiste.pin@gmail.com>",
+  "description": "a sample app of Geotrouvetou library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jbpin/geo-trouvetou.git"
+  },
+  "keywords": [
+    "geo",
+    "localisation",
+    "nearest"
+  ],
+  "dependencies" : {
+    "prompt":"*",
+    "coffee-script":">=1.6.2"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.6"
+  }
+}

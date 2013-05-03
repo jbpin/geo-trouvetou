@@ -2,7 +2,6 @@ fs = require "fs"
 path = require "path"
 geo = require "./GeoTrouvetou"
 prompt = require "prompt"
-async = require "async"
 
 time = process.hrtime()
 
