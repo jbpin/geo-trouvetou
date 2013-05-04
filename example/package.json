@@ -9,7 +9,8 @@
   },
   "dependencies" : {
     "prompt":"*",
-    "coffee-script":">=1.6.2"
+    "coffee-script":">=1.6.2",
+    "geotrouvetou":"*"
   },
   "license": "MIT",
   "engines": {
