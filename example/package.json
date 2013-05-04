@@ -7,11 +7,6 @@
     "type": "git",
     "url": "https://github.com/jbpin/geo-trouvetou.git"
   },
-  "keywords": [
-    "geo",
-    "localisation",
-    "nearest"
-  ],
   "dependencies" : {
     "prompt":"*",
     "coffee-script":">=1.6.2"

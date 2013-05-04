@@ -75,43 +75,50 @@ function TreeNode(point){
 		}
 	}
 
-	this.getClosest = function(point,parent,previousDirection){
-		if(this.point.equals(point))
-			return this.point;
+	this.logPoint = function(point){
+		console.log(point.latitude+" "+point.longitude);
+	}
+
+	this.find = function(point){
 		var direction = this.point.getDirection(point);
 		if(!this.leaf[direction]){
-			if(!parent)
-				return this.point
-			// Find the nearest point
-			//  (xn - x0)² + (yn - y0)² 
-			var sqdist1 = Math.pow(point.latitude - this.point.latitude,2) + Math.pow(point.longitude - this.point.longitude,2)
-			var sqdist2 = Math.pow(parent.latitude - this.point.latitude,2) + Math.pow(parent.longitude - this.point.longitude,2)
-			if(sqdist1 > sqdist2){
-				return this.point;
-			}else{
-				return parent.point;
-			}
+			return this;
 		}else{
-			var p = this.leaf[direction].getClosest(point,this,direction);
-			if(direction != 0 && this.leaf[0]){
-				var p0 = this.leaf[0].getClosest(point,this,0);
-				p = point.closer(p,p0);
+			var n = this.leaf[direction].find(point);
+			var p = point.closer(n.point,this.point);
+			if(p == this.point)
+				n = this;
+			var c,c1,c2;
+			if(direction == 0 || direction == 3){
+				if(this.leaf[1])
+					c1 = this.leaf[1].find(point);
+				if(this.leaf[2])
+					c2 = this.leaf[2].find(point);
+			}else{
+				if(this.leaf[0])
+					c1 = this.leaf[0].find(point);
+				if(this.leaf[3])
+					c2 = this.leaf[3].find(point);
 			}
-			if(direction != 1 && this.leaf[1]){
-				var p0 = this.leaf[1].getClosest(point,this,1);
-				p = point.closer(p,p0);
+			if(c1 && c2){
+				p = point.closer(c1.point,c2.point);
+				if(p == c1.point)
+					c = c1;
+				else
+					c = c2;
+			}else if(c1){
+				c = c1
+			}else if(c2){
+				c = c2	
+			}else{
+				return n;
 			}
-			if(direction != 2 && this.leaf[2]){
-				var p0 = this.leaf[2].getClosest(point,this,2);
-				p = point.closer(p,p0);
+			p = point.closer(n.point, c.point);
+			if(p == c.point){
+				n = c;
 			}
-			if(direction != 3 && this.leaf[3]){
-				var p0 = this.leaf[3].getClosest(point,this,3);
-				p = point.closer(p,p0);
-			}
-			return p;
+			return n;
 		}
-
 	}
 
 }
@@ -129,7 +136,9 @@ function GeoTrouvetou(){
 	}
 
 	this.findClosest = function(point){
-		return this.tree.getClosest(point);
+		if(this.tree == null)
+			return null;
+		return this.tree.find(point).point;
 	}
 }
 

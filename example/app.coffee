@@ -1,6 +1,6 @@
 fs = require "fs"
 path = require "path"
-geo = require "./GeoTrouvetou"
+geo = require "./geotrouvetou"
 prompt = require "prompt"
 
 time = process.hrtime()
@@ -11,6 +11,11 @@ elapsed_time = (note)->
 	elapsed = process.hrtime(time)[1] / 1000000;
 	console.log time[0]+"s "+elapsed.toFixed(precision) + " ms - " + note
 	time = process.hrtime()
+
+randomFloatBetween = (minValue,maxValue,precision)->
+    if(typeof(precision) == 'undefined')
+        precision = 2;
+    return parseFloat(Math.min(minValue + (Math.random() * (maxValue - minValue)),maxValue).toFixed(precision))
 
 app = {
 
@@ -30,13 +35,13 @@ app = {
 			i = data.data.length
 			while(i--)
 				item = data.data[i]
-				point = new geo.GeoPoint(item[18], item[17])
+				point = new geo.GeoPoint(parseFloat(item[18]), parseFloat(item[17]))
 				point.data = item
 				app.tree.addPoint point
-			console.log app.tree.tree
 			elapsed_time("building tree")
 			console.log data.data.length+" points loaded"
 			console.log "The app is ready"
+
 			prompt.start()
 			app.infinite()
 
