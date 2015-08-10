@@ -1,0 +1,26 @@
+{
+  "name": "geo-trouvetou",
+  "version": "0.0.1",
+  "description": "Simple library to find the closet point of a defined location",
+  "main": "geotrouvetou.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jbpin/geo-trouvetou.git"
+  },
+  "keywords": [
+    "position",
+    "closer"
+  ],
+  "author": "JBPIN",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jbpin/geo-trouvetou/issues"
+  },
+  "homepage": "https://github.com/jbpin/geo-trouvetou#readme"
+}
