@@ -22,7 +22,6 @@
 
 
 function GeoPoint(latitude,longitude){
-	
 	this.latitude = latitude;
 	this.longitude = longitude;
 	this.data = null;
@@ -67,11 +66,26 @@ function TreeNode(point){
 }
 
 TreeNode.prototype.addLeaf = function(point){
-	var direction = this.point.getDirection(point);
-	if(!this.leaf[direction]){
-		this.leaf[direction] = new TreeNode(point);
-	}else{
-		this.leaf[direction].addLeaf(point);
+	// find current closest point
+	var p = this.find(point);
+	// get direction
+	var dir = p.point.getDirection(point);
+	// if no point on this direction add it to this treenode
+	if(!p.leaf[dir]){
+		p.leaf[dir] = new TreeNode(point);
+	} else {
+		// get closest point
+		var c = p.point.closer(point, p.leaf[dir].point);
+		// if the closest point is the leaf add under it
+		if(c == p.leaf[dir].point) {
+			p.leaf[dir].addLeaf(point);
+		} else {
+			// replace the current leaf with the new leaf and attach the old one to it
+			var pl = p.leaf[dir];
+			var pt = new TreeNode(point);
+			pt.leaf[pt.point.getDirection(pl.point)] = pl;
+			p.leaf[dir] = pt;
+		}
 	}
 };
 
@@ -82,7 +96,20 @@ TreeNode.prototype.logPoint = function(point){
 TreeNode.prototype.find = function(point){
 	var direction = this.point.getDirection(point);
 	if(!this.leaf[direction]){
-		return this;
+		// if no leaf so return this point
+		if(!this.leaf.length){
+			return this;
+		} else {
+			// else find the closest point on leafs
+			var closest = this;
+			this.leaf.forEach(function (leaf) {
+				var closerPoint = point.closer(closest.point, leaf.point);
+				if( closerPoint !== closest.point) {
+					closest = leaf;
+				}
+			});
+			return closest == this ? this : closest.find(point);
+		}
 	}else{
 		var n = this.leaf[direction].find(point);
 		var p = point.closer(n.point,this.point);
@@ -121,6 +148,18 @@ TreeNode.prototype.find = function(point){
 	}
 };
 
+TreeNode.prototype.toString = function(prefix) {
+	if(!prefix) {
+		prefix = '.';
+	}
+	if(this.point.data && this.point.data.name) {
+		console.log(prefix + ' ' + this.point.data.name + ': ' + this.point.latitude + ',' + this.point.longitude);
+	}
+	this.leaf.forEach(function(dir, index) {
+		dir.toString(prefix + '--' + index);
+	});
+};
+
 function GeoTrouvetou(){
 	this.tree = null;
 }
@@ -136,7 +175,11 @@ GeoTrouvetou.prototype.addPoint = function(point){
 GeoTrouvetou.prototype.findClosest = function(point){
 	if(this.tree === null)
 		return null;
-	return this.tree.find(point).point;
+	return this.tree.find(point);
+};
+
+GeoTrouvetou.prototype.toString = function(){
+	this.tree.toString();
 };
 
 //Node js export
