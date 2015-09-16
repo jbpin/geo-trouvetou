@@ -175,7 +175,7 @@ GeoTrouvetou.prototype.addPoint = function(point){
 GeoTrouvetou.prototype.findClosest = function(point){
 	if(this.tree === null)
 		return null;
-	return this.tree.find(point);
+	return this.tree.find(point).point;
 };
 
 GeoTrouvetou.prototype.toString = function(){
