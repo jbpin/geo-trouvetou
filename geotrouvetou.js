@@ -93,7 +93,7 @@ TreeNode.prototype.logPoint = function(point){
 	console.log(point.latitude+" "+point.longitude);
 };
 
-TreeNode.prototype.find = function(point){
+TreeNode.prototype.find = function(point, deep){
 	var direction = this.point.getDirection(point);
 	if(!this.leaf[direction]){
 		// if no leaf so return this point
@@ -103,29 +103,33 @@ TreeNode.prototype.find = function(point){
 			// else find the closest point on leafs
 			var closest = this;
 			this.leaf.forEach(function (leaf) {
+				var pleaf = leaf.point;
+				if(deep){
+					pleaf = leaf.find(point, deep);
+				}
 				var closerPoint = point.closer(closest.point, leaf.point);
 				if( closerPoint !== closest.point) {
 					closest = leaf;
 				}
 			});
-			return closest == this ? this : closest.find(point);
+			return closest == this ? this : closest.find(point,deep);
 		}
 	}else{
-		var n = this.leaf[direction].find(point);
+		var n = this.leaf[direction].find(point,deep);
 		var p = point.closer(n.point,this.point);
 		if(p == this.point)
 			n = this;
 		var c,c1,c2;
 		if(direction === 0 || direction === 3){
 			if(this.leaf[1])
-				c1 = this.leaf[1].find(point);
+				c1 = this.leaf[1].find(point,deep);
 			if(this.leaf[2])
-				c2 = this.leaf[2].find(point);
+				c2 = this.leaf[2].find(point,deep);
 		}else{
 			if(this.leaf[0])
-				c1 = this.leaf[0].find(point);
+				c1 = this.leaf[0].find(point,deep);
 			if(this.leaf[3])
-				c2 = this.leaf[3].find(point);
+				c2 = this.leaf[3].find(point,deep);
 		}
 		if(c1 && c2){
 			p = point.closer(c1.point,c2.point);
